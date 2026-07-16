@@ -56,7 +56,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = User
-        fields = ['name', 'email', 'date_of_birth', 'password', 'confirm_password']
+        fields = ['name', 'email', 'date_of_birth', 'gender', 'password', 'confirm_password']
         extra_kwargs = {
             'name': {'required': True},
             'email': {'required': True},
@@ -130,6 +130,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             name=validated_data['name'],
             password=validated_data['password'],
             date_of_birth=validated_data.get('date_of_birth'),
+            gender=validated_data.get('gender'),
             is_active=False  # User is inactive until OTP verification
         )
         

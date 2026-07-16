@@ -22,7 +22,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"date_of_birth\": \"2000-01-01\",\n    \"password\": \"Password123!\",\n    \"confirm_password\": \"Password123!\"\n}"
+							"raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"date_of_birth\": \"2000-01-01\",\n    \"gender\": \"male\",\n    \"password\": \"Password123!\",\n    \"confirm_password\": \"Password123!\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/api/users/signup/",
