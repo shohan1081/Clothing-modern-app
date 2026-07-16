@@ -1,0 +1,845 @@
+{
+	"info": {
+		"_postman_id": "b1b88e14-d8bc-4674-a698-132d733e85bc",
+		"name": "MyClosly MVP API",
+		"description": "API collection for testing MyClosly MVP App authentication, user profiles, and legal endpoints.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Signup (Register)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"date_of_birth\": \"2000-01-01\",\n    \"password\": \"Password123!\",\n    \"confirm_password\": \"Password123!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/signup/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"signup",
+								""
+							]
+						},
+						"description": "Registers a new user. The account is set to inactive and triggers a 4-digit OTP email."
+					},
+					"response": []
+				},
+				{
+					"name": "Verify OTP",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"john.doe@example.com\",\n    \"otp\": \"1234\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/verify-otp/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"verify-otp",
+								""
+							]
+						},
+						"description": "Verifies the registration OTP code to activate the user account."
+					},
+					"response": []
+				},
+				{
+					"name": "Resend OTP",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"john.doe@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/resend-otp/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"resend-otp",
+								""
+							]
+						},
+						"description": "Resends a new 4-digit OTP code to the registered email address if the user is not yet active."
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.success && jsonData.data && jsonData.data.tokens) {",
+									"    pm.collectionVariables.set(\"accessToken\", jsonData.data.tokens.access);",
+									"    pm.collectionVariables.set(\"refreshToken\", jsonData.data.tokens.refresh);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"john.doe@example.com\",\n    \"password\": \"Password123!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/login/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"login",
+								""
+							]
+						},
+						"description": "Authenticates user credentials and returns JWT access and refresh tokens. Saves tokens in collection variables."
+					},
+					"response": []
+				},
+				{
+					"name": "Firebase Auth",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.success && jsonData.data && jsonData.data.tokens) {",
+									"    pm.collectionVariables.set(\"accessToken\", jsonData.data.tokens.access);",
+									"    pm.collectionVariables.set(\"refreshToken\", jsonData.data.tokens.refresh);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firebase_token\": \"YOUR_FIREBASE_ID_TOKEN\",\n    \"name\": \"Google User\",\n    \"date_of_birth\": \"2000-01-01\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/firebase-auth/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"firebase-auth",
+								""
+							]
+						},
+						"description": "Authenticates client-side Firebase tokens (Google or Apple login) and creates/retrieves user with JWT tokens."
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    pm.collectionVariables.set(\"accessToken\", \"\");",
+									"    pm.collectionVariables.set(\"refreshToken\", \"\");",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refresh\": \"{{refreshToken}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/logout/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"logout",
+								""
+							]
+						},
+						"description": "Logs out the authenticated user by blacklisting the provided refresh token."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Token Management",
+			"item": [
+				{
+					"name": "Token Refresh",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.success && jsonData.data) {",
+									"    pm.collectionVariables.set(\"accessToken\", jsonData.data.access);",
+									"    if (jsonData.data.refresh) {",
+									"        pm.collectionVariables.set(\"refreshToken\", jsonData.data.refresh);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refresh\": \"{{refreshToken}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/token/refresh/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"token",
+								"refresh",
+								""
+							]
+						},
+						"description": "Refreshes an expired access token using the valid refresh token."
+					},
+					"response": []
+				},
+				{
+					"name": "Token Verify",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"{{accessToken}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/token/verify/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"token",
+								"verify",
+								""
+							]
+						},
+						"description": "Verifies whether a given JWT access token is valid and not expired."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Profile",
+			"item": [
+				{
+					"name": "Get Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/users/profile/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"profile",
+								""
+							]
+						},
+						"description": "Retrieves the user profile information for the authenticated user."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Profile (PUT)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"John Doe Updated\",\n    \"date_of_birth\": \"2000-01-01\",\n    \"gender\": \"male\",\n    \"occupation\": \"Software Engineer\",\n    \"country\": \"United States\",\n    \"bio\": \"Passionate developer exploring postman testing.\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/profile/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"profile",
+								""
+							]
+						},
+						"description": "Completely updates the user profile data."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Profile (PATCH)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"bio\": \"Just updating my bio text.\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/profile/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"profile",
+								""
+							]
+						},
+						"description": "Partially updates user profile properties."
+					},
+					"response": []
+				},
+				{
+					"name": "Set Language Preference",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"language\": \"hi\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/set-language/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"set-language",
+								""
+							]
+						},
+						"description": "Updates language preferences. Supported choices: 'en', 'hi', 'pt'. Translates responses dynamically using middleware."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Password Management",
+			"item": [
+				{
+					"name": "Password Reset Request",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"john.doe@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/password-reset/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"password-reset",
+								""
+							]
+						},
+						"description": "Sends a password reset request OTP to the given email if registered."
+					},
+					"response": []
+				},
+				{
+					"name": "Password Reset OTP Verify",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"john.doe@example.com\",\n    \"otp\": \"1234\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/password-reset-otp-verify/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"password-reset-otp-verify",
+								""
+							]
+						},
+						"description": "Verifies the reset password OTP to grant reset permissions."
+					},
+					"response": []
+				},
+				{
+					"name": "Password Reset Confirm",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"john.doe@example.com\",\n    \"password\": \"NewPassword123!\",\n    \"confirm_password\": \"NewPassword123!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/password-reset-confirm/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"password-reset-confirm",
+								""
+							]
+						},
+						"description": "Updates password after OTP is verified successfully."
+					},
+					"response": []
+				},
+				{
+					"name": "Password Change (Authenticated)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"old_password\": \"Password123!\",\n    \"new_password\": \"NewPassword123!\",\n    \"confirm_password\": \"NewPassword123!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/password-change/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"password-change",
+								""
+							]
+						},
+						"description": "Changes the password for currently authenticated user."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Account & Data Deletion",
+			"item": [
+				{
+					"name": "Delete Account (Direct API)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    pm.collectionVariables.set(\"accessToken\", \"\");",
+									"    pm.collectionVariables.set(\"refreshToken\", \"\");",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"password\": \"Password123!\",\n    \"confirm_deletion\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/account-delete/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"account-delete",
+								""
+							]
+						},
+						"description": "Directly deletes the authenticated user's account from the database."
+					},
+					"response": []
+				},
+				{
+					"name": "Request Account Deletion (GDPR Form)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john.doe@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/delete-account-request/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"delete-account-request",
+								""
+							]
+						},
+						"description": "Creates an AccountDeletionRequest model object and emails a confirmation verification link to confirm deletion."
+					},
+					"response": []
+				},
+				{
+					"name": "Request Profile Data Deletion (GDPR Form)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"john.doe@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/delete-profile-data-request/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"delete-profile-data-request",
+								""
+							]
+						},
+						"description": "Creates a ProfileDataDeletionRequest model object and emails a confirmation verification link to confirm data anonymization/deletion."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Legal & Info",
+			"item": [
+				{
+					"name": "Get Privacy Policy",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/legal/privacy-policy/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"legal",
+								"privacy-policy",
+								""
+							]
+						},
+						"description": "Retrieves the privacy policy legal page template."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Terms & Conditions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/legal/terms-and-conditions/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"legal",
+								"terms-and-conditions",
+								""
+							]
+						},
+						"description": "Retrieves the terms and conditions legal page template."
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://127.0.0.1:8000",
+			"type": "string"
+		},
+		{
+			"key": "accessToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "refreshToken",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
