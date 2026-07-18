@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     # coustom apps can be added here
     'users.apps.UsersConfig',
     'legal_pages.apps.LegalPagesConfig',
+    'affiliate.apps.AffiliateConfig',
 ]
 
 AUTH_USER_MODEL = 'users.User'
@@ -163,6 +164,9 @@ DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default=EMAIL_HOST_USER)
 
 # Firebase Configuration
 FIREBASE_CREDENTIALS_PATH = config('FIREBASE_CREDENTIALS_PATH', default='firebase-credentials.json')
+
+# Awin Affiliate Configuration
+AWIN_FEED_URL = config('AWIN_FEED_URL', default=None)
 
 
 
