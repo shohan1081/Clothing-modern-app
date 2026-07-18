@@ -548,7 +548,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"style_goals\": [\"refresh_wardrobe\", \"find_my_style\"],\n    \"style_vibe\": [\"minimalist\", \"classic\"],\n    \"fashion_openness\": \"sometimes_new\",\n    \"lifestyle_tags\": [\"work_office\", \"casual_everyday\"],\n    \"body_type\": \"hourglass\",\n    \"fit_preference\": \"regular\",\n    \"height_cm\": 165,\n    \"weight_kg\": 60,\n    \"skin_tone\": \"#F0B27A\",\n    \"color_palette\": \"neutral_minimalist\",\n    \"clothing_categories\": {\n        \"tops\": [\"shirts\", \"hoodies\"],\n        \"shoes\": [\"sneakers\", \"boots\"]\n    },\n    \"preferred_brands\": [\"zara\", \"nike\", \"uniqlo\"],\n    \"budget_range\": \"mid_range\",\n    \"shopping_frequency\": \"monthly\",\n    \"sustainability_preference\": \"somewhat_important\"\n}"
+							"raw": "{\n    \"style_match\": [\"minimalist\", \"classic\"],\n    \"body_type\": \"hourglass\",\n    \"height_cm\": 165,\n    \"weight_kg\": 60,\n    \"chest\": \"36\",\n    \"waist\": \"30\",\n    \"hip\": \"38\",\n    \"body_size\": \"m\",\n    \"shoe_size\": \"UK 8\",\n    \"skin_tone\": \"#F0B27A\",\n    \"color_palette\": \"neutral_minimalist\",\n    \"clothing_categories\": {\n        \"tops\": [\"shirts\", \"hoodies\"],\n        \"shoes\": [\"sneakers\", \"boots\"]\n    },\n    \"preferred_brands\": [\"zara\", \"nike\", \"uniqlo\"]\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/api/users/preferences/",
