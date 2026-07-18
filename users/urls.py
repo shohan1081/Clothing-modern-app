@@ -8,7 +8,7 @@ from .views import (
     ResendOTPView,
     PasswordResetRequestView,
     PasswordResetOTPVerifyView,
-    PasswordResetConfirmView,  # Add this import
+    PasswordResetConfirmView,
     PasswordChangeView,
     UserProfileView,
     AccountDeleteView,
@@ -21,6 +21,7 @@ from .views import (
     delete_profile_data_request_view,
     ProfileDataDeletionAPIView,
     VerifyProfileDataDeletionView,
+    UserPreferenceView,
 )
 
 app_name = 'users'
@@ -60,4 +61,7 @@ urlpatterns = [
     path('delete-profile-data/', delete_profile_data_request_view, name='delete-profile-data-form'),
     path('delete-profile-data-request/', ProfileDataDeletionAPIView.as_view(), name='delete-profile-data-request'),
     path('verify-profile-data-deletion/<uuid:token>/', VerifyProfileDataDeletionView.as_view(), name='verify_profile_data_deletion'),
+
+    # User Preferences (onboarding)
+    path('preferences/', UserPreferenceView.as_view(), name='user-preferences'),
 ]
