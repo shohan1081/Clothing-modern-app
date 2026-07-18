@@ -547,17 +547,11 @@ from .models import UserPreference
 class UserPreferenceSerializer(serializers.ModelSerializer):
     """
     Serializer for reading and writing user onboarding preferences.
-
-    All fields are optional — the user can submit any subset across
-    the 4 onboarding pages, or skip everything entirely.
-
-    Also exposes read-only choice metadata so the frontend can
-    dynamically render option lists without hardcoding them.
     """
 
-    # -------------------------------------------------------------- #
     # Read-only choice metadata (sent to frontend for rendering UI)
-    # -------------------------------------------------------------- #
+    style_match_options = serializers.SerializerMethodField(read_only=True)
+    body_size_options = serializers.SerializerMethodField(read_only=True)
     skin_tone_options = serializers.SerializerMethodField(read_only=True)
     clothing_category_options = serializers.SerializerMethodField(read_only=True)
     brand_options = serializers.SerializerMethodField(read_only=True)
@@ -565,36 +559,53 @@ class UserPreferenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserPreference
         fields = [
-            # Page 1
-            'style_goals',
-            'style_vibe',
-            'fashion_openness',
-            # Page 2
-            'lifestyle_tags',
+            'style_match',
             'body_type',
-            'fit_preference',
             'height_cm',
             'weight_kg',
-            # Page 3
+            'chest',
+            'waist',
+            'hip',
+            'body_size',
+            'shoe_size',
             'skin_tone',
             'color_palette',
             'clothing_categories',
             'preferred_brands',
-            # Page 4
-            'budget_range',
-            'shopping_frequency',
-            'sustainability_preference',
-            # Meta
             'onboarding_completed',
             'created_at',
             'updated_at',
             # Frontend helpers (read-only)
+            'style_match_options',
+            'body_size_options',
             'skin_tone_options',
             'clothing_category_options',
             'brand_options',
         ]
-        read_only_fields = ['onboarding_completed', 'created_at', 'updated_at',
-                            'skin_tone_options', 'clothing_category_options', 'brand_options']
+        read_only_fields = [
+            'onboarding_completed',
+            'created_at',
+            'updated_at',
+            'style_match_options',
+            'body_size_options',
+            'skin_tone_options',
+            'clothing_category_options',
+            'brand_options',
+        ]
+
+    def get_style_match_options(self, obj):
+        """Returns list of {key, label} for style match options."""
+        return [
+            {'key': key, 'label': label}
+            for key, label in UserPreference.STYLE_MATCH_CHOICES
+        ]
+
+    def get_body_size_options(self, obj):
+        """Returns list of body size choices."""
+        return [
+            {'key': key, 'label': label}
+            for key, label in UserPreference.BODY_SIZE_CHOICES
+        ]
 
     def get_skin_tone_options(self, obj):
         """Returns list of {hex, label} for frontend color picker."""
@@ -611,31 +622,21 @@ class UserPreferenceSerializer(serializers.ModelSerializer):
         """Returns brand options grouped by tier."""
         return UserPreference.BRAND_OPTIONS
 
-    def validate_style_goals(self, value):
+    def validate_style_match(self, value):
         if not isinstance(value, list):
             raise serializers.ValidationError("Must be a list.")
-        valid = [k for k, _ in UserPreference.STYLE_GOAL_CHOICES]
+        valid = [k for k, _ in UserPreference.STYLE_MATCH_CHOICES]
         invalid = [v for v in value if v not in valid]
         if invalid:
             raise serializers.ValidationError(f"Invalid values: {invalid}. Valid: {valid}")
         return value
 
-    def validate_style_vibe(self, value):
-        if not isinstance(value, list):
-            raise serializers.ValidationError("Must be a list.")
-        valid = [k for k, _ in UserPreference.VIBE_CHOICES]
-        invalid = [v for v in value if v not in valid]
-        if invalid:
-            raise serializers.ValidationError(f"Invalid values: {invalid}. Valid: {valid}")
-        return value
-
-    def validate_lifestyle_tags(self, value):
-        if not isinstance(value, list):
-            raise serializers.ValidationError("Must be a list.")
-        valid = [k for k, _ in UserPreference.LIFESTYLE_CHOICES]
-        invalid = [v for v in value if v not in valid]
-        if invalid:
-            raise serializers.ValidationError(f"Invalid values: {invalid}. Valid: {valid}")
+    def validate_body_size(self, value):
+        if not value:
+            return value
+        valid = [k for k, _ in UserPreference.BODY_SIZE_CHOICES]
+        if value not in valid:
+            raise serializers.ValidationError(f"Invalid body size. Valid: {valid}")
         return value
 
     def validate_skin_tone(self, value):
@@ -675,7 +676,6 @@ class UserPreferenceSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         for field, val in validated_data.items():
             setattr(instance, field, val)
-        # Mark onboarding as started once any data is saved
         instance.onboarding_completed = True
         instance.save()
         return instance
