@@ -226,22 +226,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class UserPreference(models.Model):
     """
-    Stores all onboarding preference data collected across 4 screens.
-
-    Page 1 (1341-456) — Style Identity:
-        style_goals, style_vibe, fashion_openness
-
-    Page 2 (9-2427) — Lifestyle & Fit:
-        lifestyle_tags, body_type, fit_preference, height_cm, weight_kg
-
-    Page 3 (87-1217) — Wardrobe Details:
-        skin_tone, color_palette, clothing_categories, preferred_brands
-
-    Page 4 (1197-1717) — Budget & Shopping:
-        budget_range, shopping_frequency, sustainability_preference
-
-    All fields are optional (blank=True, null=True / default=[]).
-    The user can skip any page or any field — no validation errors.
+    Stores all onboarding preference data collected.
     """
 
     user = models.OneToOneField(
@@ -251,24 +236,8 @@ class UserPreference(models.Model):
         verbose_name=_('user'),
     )
 
-    # ------------------------------------------------------------------ #
-    # PAGE 1 — Style Identity / Onboarding intro
-    # ------------------------------------------------------------------ #
-
-    STYLE_GOAL_CHOICES = [
-        ('refresh_wardrobe',    'Refresh my wardrobe'),
-        ('find_my_style',       'Find my personal style'),
-        ('dress_for_occasions', 'Dress for specific occasions'),
-        ('shop_smarter',        'Shop smarter & sustainably'),
-        ('explore_trends',      'Explore new trends'),
-    ]
-    style_goals = models.JSONField(
-        _('style goals'),
-        default=list, blank=True,
-        help_text=_("List of style goal keys from STYLE_GOAL_CHOICES"),
-    )
-
-    VIBE_CHOICES = [
+    # Style Identity / Style Match (formerly vibe)
+    STYLE_MATCH_CHOICES = [
         ('classic',     'Classic & Timeless'),
         ('streetwear',  'Streetwear & Urban'),
         ('minimalist',  'Minimalist & Clean'),
@@ -278,42 +247,13 @@ class UserPreference(models.Model):
         ('edgy',        'Edgy & Bold'),
         ('preppy',      'Preppy & Smart'),
     ]
-    style_vibe = models.JSONField(
-        _('style vibe'),
+    style_match = models.JSONField(
+        _('style match'),
         default=list, blank=True,
-        help_text=_("List of vibe keys from VIBE_CHOICES"),
+        help_text=_("List of style match keys from STYLE_MATCH_CHOICES"),
     )
 
-    OPENNESS_CHOICES = [
-        ('stick_to_classics', 'I stick to what I know'),
-        ('sometimes_new',     'I try new things sometimes'),
-        ('love_experimenting','I love experimenting'),
-    ]
-    fashion_openness = models.CharField(
-        _('fashion openness'),
-        max_length=30, blank=True, default='',
-        choices=OPENNESS_CHOICES,
-    )
-
-    # ------------------------------------------------------------------ #
-    # PAGE 2 — Lifestyle & Body Fit
-    # ------------------------------------------------------------------ #
-
-    LIFESTYLE_CHOICES = [
-        ('work_office',     'Work / Office'),
-        ('casual_everyday', 'Casual Everyday'),
-        ('active_sport',    'Active / Sport'),
-        ('going_out',       'Going Out / Nightlife'),
-        ('travel',          'Travel'),
-        ('formal_events',   'Formal / Events'),
-        ('home_lounge',     'Home / Lounge'),
-    ]
-    lifestyle_tags = models.JSONField(
-        _('lifestyle tags'),
-        default=list, blank=True,
-        help_text=_("List of lifestyle keys from LIFESTYLE_CHOICES"),
-    )
-
+    # Body measurements & sizing
     BODY_TYPE_CHOICES = [
         ('hourglass',    'Hourglass'),
         ('pear',         'Pear'),
@@ -328,18 +268,6 @@ class UserPreference(models.Model):
         choices=BODY_TYPE_CHOICES,
     )
 
-    FIT_CHOICES = [
-        ('slim',      'Slim / Fitted'),
-        ('regular',   'Regular'),
-        ('relaxed',   'Relaxed'),
-        ('oversized', 'Oversized'),
-    ]
-    fit_preference = models.CharField(
-        _('fit preference'),
-        max_length=15, blank=True, default='',
-        choices=FIT_CHOICES,
-    )
-
     height_cm = models.PositiveSmallIntegerField(
         _('height (cm)'),
         null=True, blank=True,
@@ -350,10 +278,45 @@ class UserPreference(models.Model):
         null=True, blank=True,
     )
 
-    # ------------------------------------------------------------------ #
-    # PAGE 3 — Wardrobe Details
-    # ------------------------------------------------------------------ #
+    chest = models.CharField(
+        _('chest size'),
+        max_length=20, blank=True, default='',
+        help_text=_("Chest size description/measurement")
+    )
 
+    waist = models.CharField(
+        _('waist size'),
+        max_length=20, blank=True, default='',
+        help_text=_("Waist size description/measurement")
+    )
+
+    hip = models.CharField(
+        _('hip size'),
+        max_length=20, blank=True, default='',
+        help_text=_("Hip size description/measurement")
+    )
+
+    BODY_SIZE_CHOICES = [
+        ('s', 'S'),
+        ('m', 'M'),
+        ('l', 'L'),
+        ('xl', 'XL'),
+        ('xxl', 'XXL'),
+        ('xxxl', 'XXXL'),
+    ]
+    body_size = models.CharField(
+        _('body size'),
+        max_length=10, blank=True, default='',
+        choices=BODY_SIZE_CHOICES,
+    )
+
+    shoe_size = models.CharField(
+        _('shoe size'),
+        max_length=20, blank=True, default='',
+        help_text=_("Shoe size description/measurement")
+    )
+
+    # Wardrobe Details
     # Skin tone — stored as hex color code, e.g. "#F1C27D"
     SKIN_TONE_CHOICES = [
         ('#FDDBB4', 'Fair / Porcelain'),
@@ -416,50 +379,7 @@ class UserPreference(models.Model):
         help_text=_("List of brand name strings the user prefers"),
     )
 
-    # ------------------------------------------------------------------ #
-    # PAGE 4 — Budget & Shopping habits
-    # ------------------------------------------------------------------ #
-
-    BUDGET_CHOICES = [
-        ('budget',    'Budget (under £30 per item)'),
-        ('mid_range', 'Mid-range (£30–£100)'),
-        ('premium',   'Premium (£100–£300)'),
-        ('luxury',    'Luxury (£300+)'),
-    ]
-    budget_range = models.CharField(
-        _('budget range'),
-        max_length=15, blank=True, default='',
-        choices=BUDGET_CHOICES,
-    )
-
-    FREQUENCY_CHOICES = [
-        ('rarely',      'Rarely (few times a year)'),
-        ('monthly',     'Monthly'),
-        ('bi_weekly',   'Every two weeks'),
-        ('weekly',      'Weekly'),
-    ]
-    shopping_frequency = models.CharField(
-        _('shopping frequency'),
-        max_length=15, blank=True, default='',
-        choices=FREQUENCY_CHOICES,
-    )
-
-    SUSTAINABILITY_CHOICES = [
-        ('not_important',       'Not important to me'),
-        ('somewhat_important',  'Somewhat important'),
-        ('very_important',      'Very important'),
-        ('only_sustainable',    'I only buy sustainable'),
-    ]
-    sustainability_preference = models.CharField(
-        _('sustainability preference'),
-        max_length=20, blank=True, default='',
-        choices=SUSTAINABILITY_CHOICES,
-    )
-
-    # ------------------------------------------------------------------ #
     # Meta
-    # ------------------------------------------------------------------ #
-
     onboarding_completed = models.BooleanField(
         _('onboarding completed'),
         default=False,
