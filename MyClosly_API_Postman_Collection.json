@@ -493,6 +493,78 @@
 						"description": "Updates language preferences. Supported choices: 'en', 'hi', 'pt'. Translates responses dynamically using middleware."
 					},
 					"response": []
+				},
+				{
+					"name": "Get User Preferences (Onboarding)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/users/preferences/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"preferences",
+								""
+							]
+						},
+						"description": "Retrieves the user's onboarding fashion preferences and option configurations."
+					},
+					"response": []
+				},
+				{
+					"name": "Save User Preferences (Onboarding)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"style_goals\": [\"refresh_wardrobe\", \"find_my_style\"],\n    \"style_vibe\": [\"minimalist\", \"classic\"],\n    \"fashion_openness\": \"sometimes_new\",\n    \"lifestyle_tags\": [\"work_office\", \"casual_everyday\"],\n    \"body_type\": \"hourglass\",\n    \"fit_preference\": \"regular\",\n    \"height_cm\": 165,\n    \"weight_kg\": 60,\n    \"skin_tone\": \"#F0B27A\",\n    \"color_palette\": \"neutral_minimalist\",\n    \"clothing_categories\": {\n        \"tops\": [\"shirts\", \"hoodies\"],\n        \"shoes\": [\"sneakers\", \"boots\"]\n    },\n    \"preferred_brands\": [\"zara\", \"nike\", \"uniqlo\"],\n    \"budget_range\": \"mid_range\",\n    \"shopping_frequency\": \"monthly\",\n    \"sustainability_preference\": \"somewhat_important\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/preferences/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"preferences",
+								""
+							]
+						},
+						"description": "Saves or updates user's onboarding style preferences. All fields are optional (supports page-by-page partial saving)."
+					},
+					"response": []
 				}
 			]
 		},
