@@ -981,3 +981,75 @@ class SetLanguageView(APIView):
             return standard_response(success=True, message="Language preference updated successfully.", data={'language': language})
         return standard_response(success=False, message="Invalid request data", errors=serializer.errors, status_code=status.HTTP_400_BAD_REQUEST)
 
+
+
+# ======================================================================
+# USER PREFERENCE VIEW
+# ======================================================================
+
+from .models import UserPreference
+from .serializers import UserPreferenceSerializer
+
+
+class UserPreferenceView(APIView):
+    """
+    GET  /api/users/preferences/
+        Returns the current user's preferences + all valid choice options
+        so the frontend can render the onboarding UI dynamically.
+
+    POST /api/users/preferences/
+        Save/update preferences. All fields are optional — submit any
+        subset. Designed to support saving one page at a time.
+
+    Example POST body (all fields optional, submit only what you have):
+    {
+        "style_goals": ["refresh_wardrobe", "find_my_style"],
+        "style_vibe": ["minimalist", "classic"],
+        "fashion_openness": "sometimes_new",
+
+        "lifestyle_tags": ["work_office", "casual_everyday"],
+        "body_type": "hourglass",
+        "fit_preference": "regular",
+        "height_cm": 165,
+        "weight_kg": 60,
+
+        "skin_tone": "#F0B27A",
+        "color_palette": "neutral_minimalist",
+        "clothing_categories": {
+            "tops": ["shirts", "hoodies"],
+            "shoes": ["sneakers", "boots"]
+        },
+        "preferred_brands": ["zara", "nike", "uniqlo"],
+
+        "budget_range": "mid_range",
+        "shopping_frequency": "monthly",
+        "sustainability_preference": "somewhat_important"
+    }
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        prefs, _ = UserPreference.objects.get_or_create(user=request.user)
+        serializer = UserPreferenceSerializer(prefs)
+        return Response({
+            'success': True,
+            'message': 'Preferences retrieved successfully.',
+            'data': serializer.data,
+        }, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        prefs, _ = UserPreference.objects.get_or_create(user=request.user)
+        # partial=True means ALL fields are optional on every call
+        serializer = UserPreferenceSerializer(prefs, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({
+                'success': True,
+                'message': 'Preferences saved successfully.',
+                'data': serializer.data,
+            }, status=status.HTTP_200_OK)
+        return Response({
+            'success': False,
+            'message': 'Invalid preference data.',
+            'errors': serializer.errors,
+        }, status=status.HTTP_400_BAD_REQUEST)
