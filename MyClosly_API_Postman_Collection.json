@@ -803,6 +803,106 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Affiliate Marketing (Awin Feed)",
+			"item": [
+				{
+					"name": "Get Products Newsfeed",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/affiliate/products/?search=&brand=&category=&min_price=&max_price=&ordering=newest",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"affiliate",
+								"products",
+								""
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "",
+									"description": "Text search query to find product name/desc/brand"
+								},
+								{
+									"key": "brand",
+									"value": "",
+									"description": "Filter by brand name (exact, case-insensitive)"
+								},
+								{
+									"key": "category",
+									"value": "",
+									"description": "Filter by category name"
+								},
+								{
+									"key": "min_price",
+									"value": "",
+									"description": "Filter by minimum price"
+								},
+								{
+									"key": "max_price",
+									"value": "",
+									"description": "Filter by maximum price"
+								},
+								{
+									"key": "ordering",
+									"value": "newest",
+									"description": "Sorting choice: 'price_asc', 'price_desc', 'title_asc', 'newest'"
+								}
+							]
+						},
+						"description": "Fetches the paginated active affiliate products newsfeed."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Active Brands List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/affiliate/brands/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"affiliate",
+								"brands",
+								""
+							]
+						},
+						"description": "Retrieves the list of all unique active brand names in the feed."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Active Categories List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/affiliate/categories/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"affiliate",
+								"categories",
+								""
+							]
+						},
+						"description": "Retrieves the list of all unique active product categories in the feed."
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"event": [
