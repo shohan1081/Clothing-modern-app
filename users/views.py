@@ -1003,15 +1003,15 @@ class UserPreferenceView(APIView):
 
     Example POST body (all fields optional, submit only what you have):
     {
-        "style_goals": ["refresh_wardrobe", "find_my_style"],
-        "style_vibe": ["minimalist", "classic"],
-        "fashion_openness": "sometimes_new",
-
-        "lifestyle_tags": ["work_office", "casual_everyday"],
+        "style_match": ["minimalist", "classic"],
         "body_type": "hourglass",
-        "fit_preference": "regular",
         "height_cm": 165,
         "weight_kg": 60,
+        "chest": "36 inches",
+        "waist": "30 inches",
+        "hip": "38 inches",
+        "body_size": "m",
+        "shoe_size": "UK 8",
 
         "skin_tone": "#F0B27A",
         "color_palette": "neutral_minimalist",
@@ -1019,11 +1019,7 @@ class UserPreferenceView(APIView):
             "tops": ["shirts", "hoodies"],
             "shoes": ["sneakers", "boots"]
         },
-        "preferred_brands": ["zara", "nike", "uniqlo"],
-
-        "budget_range": "mid_range",
-        "shopping_frequency": "monthly",
-        "sustainability_preference": "somewhat_important"
+        "preferred_brands": ["zara", "nike", "uniqlo"]
     }
     """
     permission_classes = [IsAuthenticated]
