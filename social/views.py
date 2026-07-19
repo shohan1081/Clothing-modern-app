@@ -265,6 +265,7 @@ class DirectMessageConversationView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
     serializer_class = DirectMessageSerializer
+    pagination_class = StandardSocialPagination
 
     def get_queryset(self):
         other_user_id = self.kwargs.get('user_id')
