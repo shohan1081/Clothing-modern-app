@@ -39,6 +39,8 @@ db.sqlite3
 /staticfiles/
 /media/
 /profile_pictures/
+/today_outfits/
+/closet_items/
 
 # Secrets and Credentials
 .env
