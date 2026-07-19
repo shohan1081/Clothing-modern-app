@@ -35,6 +35,8 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'legal_pages.apps.LegalPagesConfig',
     'affiliate.apps.AffiliateConfig',
+    'closet.apps.ClosetConfig',
+    'social.apps.SocialConfig',
 ]
 
 AUTH_USER_MODEL = 'users.User'
