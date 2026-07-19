@@ -975,6 +975,444 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Closet Management",
+			"item": [
+				{
+					"name": "Add Cloth to Closet",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Vintage Denim Jacket\",\n    \"category\": \"top\",\n    \"color\": \"Blue\",\n    \"brand\": \"Levi's\",\n    \"size\": \"M\",\n    \"price\": 89.99\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/closet/items/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"closet",
+								"items",
+								""
+							]
+						},
+						"description": "Adds a new cloth item to the user's closet."
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Closet Clothes",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/closet/items/?category=&color=&brand=",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"closet",
+								"items",
+								""
+							],
+							"query": [
+								{
+									"key": "category",
+									"value": "",
+									"description": "Filter by category ('top', 'bottom', 'shoes', etc.)"
+								},
+								{
+									"key": "color",
+									"value": "",
+									"description": "Filter by color"
+								},
+								{
+									"key": "brand",
+									"value": "",
+									"description": "Filter by brand"
+								}
+							]
+						},
+						"description": "Lists all clothes in user's closet with filters."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Cloth Details",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/closet/items/1/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"closet",
+								"items",
+								"1",
+								""
+							]
+						},
+						"description": "Retrieves details of a specific cloth item (name, size, color, times worn, per wear cost, picture)."
+					},
+					"response": []
+				},
+				{
+					"name": "Calculate Wear Today",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/closet/items/1/wear-today/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"closet",
+								"items",
+								"1",
+								"wear-today",
+								""
+							]
+						},
+						"description": "Increments times_worn counter and updates last_worn_at date to recalculate per_wear_cost."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Closet Audit Analytics",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/closet/audit/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"closet",
+								"audit",
+								""
+							]
+						},
+						"description": "Generates closet audit stats (monthly addition count, total items, ghost pieces, and most worn items)."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Social & Today Outfits (MyDay)",
+			"item": [
+				{
+					"name": "Upload Today Outfit",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"caption\": \"My casual Sunday fit!\",\n    \"visibility\": \"public\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/social/outfits/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"social",
+								"outfits",
+								""
+							]
+						},
+						"description": "Posts today's worn outfit with picture, caption, and visibility ('public' or 'private')."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Global Public Newsfeed",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/social/feed/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"social",
+								"feed",
+								""
+							]
+						},
+						"description": "Fetches the public newsfeed showing all public today outfit posts from all users."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Following Only Newsfeed",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/social/feed/following/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"social",
+								"feed",
+								"following",
+								""
+							]
+						},
+						"description": "Filters newsfeed to show ONLY outfit posts from followed users."
+					},
+					"response": []
+				},
+				{
+					"name": "Like / Unlike Outfit Post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/social/outfits/1/like/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"social",
+								"outfits",
+								"1",
+								"like",
+								""
+							]
+						},
+						"description": "Toggles like/unlike on an outfit post."
+					},
+					"response": []
+				},
+				{
+					"name": "Follow / Unfollow User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/social/users/TARGET_USER_UUID/follow/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"social",
+								"users",
+								"TARGET_USER_UUID",
+								"follow",
+								""
+							]
+						},
+						"description": "Toggles follow/unfollow status for a target user UUID."
+					},
+					"response": []
+				},
+				{
+					"name": "Send Direct Message",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"recipient_id\": \"TARGET_USER_UUID\",\n    \"content\": \"Hey, love your outfit!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/social/messages/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"social",
+								"messages",
+								""
+							]
+						},
+						"description": "Sends a direct message to a user."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Conversation Messages",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/social/messages/TARGET_USER_UUID/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"social",
+								"messages",
+								"TARGET_USER_UUID",
+								""
+							]
+						},
+						"description": "Retrieves the full chat history between current user and target user."
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"event": [
